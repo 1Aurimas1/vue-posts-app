@@ -2,7 +2,7 @@
   <div id="app">
     <NavBar />
     <NotificationList />
-    <router-view></router-view>
+    <router-view class="mt-5"></router-view>
   </div>
 </template>
 

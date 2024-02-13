@@ -1,5 +1,5 @@
 <template>
-  <div class="notification is-warning">
+  <div class="notification" :class="getNotificationStyle(notification)">
     <button
       class="delete"
       @click="removeNotification(notification.id)"
@@ -10,6 +10,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { getNotificationStyle } from "../../helpers";
 
 export default {
   data() {
@@ -23,6 +24,7 @@ export default {
   },
   methods: {
     ...mapActions(["removeNotification"]),
+    getNotificationStyle,
     truncateMessage() {
       const message = this.notification.message;
       if (message && message.length > this.messageLimit) {
