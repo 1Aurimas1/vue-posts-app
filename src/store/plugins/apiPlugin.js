@@ -49,6 +49,16 @@ class ModelApiService extends ReadOnlyApiService {
       return null;
     }
   }
+
+  async patch(id, data) {
+    try {
+      const response = await this.http.patch(`/${id}`, data);
+      return response.data;
+    } catch (err) {
+      this.handleErrors(err);
+      return null;
+    }
+  }
 }
 
 class AuthorsApiService extends ModelApiService {

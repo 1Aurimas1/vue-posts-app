@@ -53,3 +53,17 @@ export class CreateAuthorValidator extends BaseValidator {
     }
   }
 }
+
+export class EditAuthorValidator extends CreateAuthorValidator {
+  constructor() {
+    super();
+  }
+
+  validateName(oldName, newName) {
+    super.validateName(newName);
+
+    if (oldName === newName) {
+      super.addError("Name should not be the same");
+    }
+  }
+}

@@ -17,6 +17,7 @@ import NotificationList from "./components/Notification/NotificationList.vue";
 import { mapGetters } from "vuex";
 import Modal from "./components/Modal.vue";
 import CreateAuthor from "./components/Forms/CreateAuthor.vue";
+import EditAuthor from "./components/Forms/EditAuthor.vue";
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,7 @@ export default {
     NotificationList,
     Modal,
     CreateAuthor,
+    EditAuthor,
   },
   computed: {
     ...mapGetters(["modal"]),
