@@ -1,6 +1,6 @@
 <template>
-  <div class="columns is-flex has-background-grey-lighter">
-    <div class="column is-4">
+  <div class="columns is-flex has-background-grey-lighter data-list">
+    <div class="column is-4 wrap">
       {{ author.name }}
     </div>
     <div class="column is-5">
@@ -24,3 +24,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.wrap {
+  word-wrap: break-word;
+  overflow: hidden;
+}
+.data-list {
+  width: 25rem;
+}
+</style>

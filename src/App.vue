@@ -5,7 +5,7 @@
     <Modal>
       <component :is="modal.component">Form loading error!</component>
     </Modal>
-    <router-view class="mt-5"></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -16,6 +16,7 @@ import NavBar from "./components/NavBar.vue";
 import NotificationList from "./components/Notification/NotificationList.vue";
 import { mapGetters } from "vuex";
 import Modal from "./components/Modal.vue";
+import CreateAuthor from "./components/Forms/CreateAuthor.vue";
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,7 @@ export default {
     NavBar,
     NotificationList,
     Modal,
+    CreateAuthor,
   },
   computed: {
     ...mapGetters(["modal"]),
