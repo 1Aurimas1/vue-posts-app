@@ -2,10 +2,13 @@ import { NotificationTypes } from "../../constants";
 
 const state = {
   authors: [],
+  selectedAuthorId: null,
 };
 
 const getters = {
   authorList: (state) => state.authors,
+  selectedAuthor: (state) =>
+    state.authors.find((a) => a.id === state.selectedAuthorId) || {},
 };
 
 const mutations = {
@@ -15,6 +18,14 @@ const mutations = {
   addNewAuthor: (state, author) => {
     state.authors.push(author);
   },
+  editAuthor: (state, updatedAuthor) => {
+    const index = state.authors.findIndex((a) => a.id === updatedAuthor.id);
+    if (index) {
+      state.selectedAuthorId = null;
+      state.authors.splice(index, 1, updatedAuthor);
+    }
+  },
+  setSelectedAuthorId: (state, id) => (state.selectedAuthorId = id),
 };
 
 const actions = {
@@ -32,7 +43,7 @@ const actions = {
 
   async addNewAuthor({ commit }, data) {
     const newAuthor = data;
-    newAuthor.created_at = new Date().toISOString().split("T")[0];
+    newAuthor.created_at = getDateNow();
     newAuthor.updated_at = newAuthor.created_at;
 
     const response = await this.$api.authors.post(newAuthor);
@@ -44,6 +55,23 @@ const actions = {
       response,
       "An error occured while creating author",
       "Author added successfully!"
+    );
+    commit("addNewNotification", notification);
+  },
+
+  async editAuthor({ commit }, data) {
+    const updatedAuthor = data.author;
+    updatedAuthor.updated_at = getDateNow();
+
+    const response = await this.$api.authors.patch(data.id, updatedAuthor);
+    if (response) {
+      commit("editAuthor", response);
+    }
+
+    const notification = getNotification(
+      response,
+      "An error occured while editing author",
+      "Author updated successfully!"
     );
     commit("addNewNotification", notification);
   },
@@ -70,6 +98,10 @@ function getNotification(data, errorMessage, successMessage) {
     }
   }
   return notification;
+}
+
+function getDateNow() {
+  return new Date().toISOString().split("T")[0];
 }
 
 export default {
