@@ -1,5 +1,9 @@
 <template>
-  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <nav
+    class="navbar is-fixed-top is-primary"
+    role="navigation"
+    aria-label="main navigation"
+  >
     <div class="navbar-brand">
       <router-link to="/" class="navbar-item">
         <img src="../assets/vue.svg" width="60" />

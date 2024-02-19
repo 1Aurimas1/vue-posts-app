@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul class="overlay">
     <li v-for="notification in notificationList" :key="notification.id">
       <Notification :notification="notification" />
     </li>
@@ -17,3 +17,11 @@ export default {
   computed: mapGetters(["notificationList"]),
 };
 </script>
+
+<style scoped>
+.overlay {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+}
+</style>

@@ -10,3 +10,26 @@ export function getNotificationStyle(notification) {
       return "is-warning";
   }
 }
+
+export function isEmpty(value) {
+  return !value || value.trim().length === 0;
+}
+
+export function isValidLength(value, min, max) {
+  return min <= value.length && value.length <= max;
+}
+
+export function containsNumbers(value) {
+  const regex = /\d/;
+  return regex.test(value);
+}
+
+export function containsSpecial(value) {
+  const regex = /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
+  return regex.test(value);
+}
+
+export function isValidFullName(value) {
+  const regex = /^(\p{L}[-',.]? ?)+$/u;
+  return regex.test(value);
+}

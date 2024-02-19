@@ -14,10 +14,6 @@ class BaseApiService {
     });
   }
 
-  getUrl() {
-    return `${this.baseUrl}/${this.resource}`;
-  }
-
   handleErrors(err) {
     console.log({ message: "Api service handler error", err });
   }
@@ -39,7 +35,23 @@ class ReadOnlyApiService extends BaseApiService {
   }
 }
 
-class AuthorsApiService extends ReadOnlyApiService {
+class ModelApiService extends ReadOnlyApiService {
+  constructor(resource) {
+    super(resource);
+  }
+
+  async post(data) {
+    try {
+      const response = await this.http.post("", data);
+      return response.data;
+    } catch (err) {
+      this.handleErrors(err);
+      return null;
+    }
+  }
+}
+
+class AuthorsApiService extends ModelApiService {
   constructor() {
     super("authors");
   }
