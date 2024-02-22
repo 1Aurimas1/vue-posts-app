@@ -25,6 +25,7 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
+import { getMaxDate } from "../../helpers";
 
 export default {
   props: {
@@ -34,10 +35,23 @@ export default {
     ...mapActions(["showModal"]),
     ...mapMutations(["setSelectedAuthorId"]),
     getNewerDate() {
-      const createdDate = new Date(this.author.created_at);
-      const updatedDate = new Date(this.author.updated_at);
-      if (createdDate < updatedDate) return this.author.updated_at;
-      return this.author.created_at;
+      return getMaxDate(this.author.created_at, this.author.updated_at);
+    },
+    showEditModal() {
+      this.setSelectedAuthorId(this.author.id);
+
+      this.showModal({
+        componentName: "EditAuthor",
+        title: "Edit author",
+      });
+    },
+    showDeleteModal() {
+      this.setSelectedAuthorId(this.author.id);
+
+      this.showModal({
+        componentName: "DeleteAuthor",
+        title: "Delete confirmation",
+      });
     },
     showEditModal() {
       this.setSelectedAuthorId(this.author.id);

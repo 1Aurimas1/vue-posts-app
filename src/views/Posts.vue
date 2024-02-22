@@ -1,24 +1,21 @@
 <template>
-  <h1 class="title">{{ title }}</h1>
+  <div class="is-flex is-flex-direction-column is-align-items-center">
+    <h1 class="title">{{ title }}</h1>
+    <PostsList />
+  </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import PostsList from "../components/Posts/PostsList.vue";
 
 export default {
+  components: {
+    PostsList,
+  },
   data() {
     return {
       title: "Posts page",
     };
-  },
-  methods: {
-    ...mapActions(["addNewNotification"]),
-  },
-  created() {
-    // fetch posts ...
-
-    // if there are no posts...
-    this.addNewNotification({ message: "There are no articles yet" });
   },
 };
 </script>

@@ -1,4 +1,4 @@
-import { NotificationTypes } from "../../constants";
+import { getNotification } from "../../helpers";
 
 const state = {
   authors: [],
@@ -43,7 +43,8 @@ const actions = {
     const notification = getNotification(
       authors,
       "An error occured while fetching data.",
-      "Data fetched successfully!"
+      "Data fetched successfully!",
+      "There are no authors yet"
     );
     commit("addNewNotification", notification);
   },
@@ -98,27 +99,8 @@ const actions = {
   },
 };
 
-function getNotification(data, errorMessage, successMessage) {
-  let notification = {};
-  if (!data) {
-    notification = {
-      type: NotificationTypes.Error,
-      message: errorMessage,
-    };
-  } else {
-    if (data.length === 0) {
-      notification = {
-        type: NotificationTypes.Success,
-        message: "There are no authors yet",
-      };
-    } else {
-      notification = {
-        type: NotificationTypes.Success,
-        message: successMessage,
-      };
-    }
-  }
-  return notification;
+function getDateNow() {
+  return new Date().toISOString().split("T")[0];
 }
 
 function getDateNow() {
