@@ -4,6 +4,7 @@ import NotificationsMod from "./modules/NotificationsMod";
 import AuthorsMod from "./modules/AuthorsMod";
 import ModalMod from "./modules/ModalMod";
 import apiPlugin from "./plugins/apiPlugin";
+import PostsMod from "./modules/PostsMod";
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     NotificationsMod,
     AuthorsMod,
     ModalMod,
+    PostsMod,
   },
   plugins: [apiPlugin],
 });

@@ -14,6 +14,21 @@ class BaseApiService {
     });
   }
 
+  buildEndpoint(options = {}) {
+    let endpoint = "";
+
+    if (options.id) {
+      endpoint += "/" + options.id;
+    }
+
+    if (options.params && Object.keys(options.params).length > 0) {
+      const queryParams = new URLSearchParams(options.params);
+      endpoint += "?" + queryParams.toString();
+    }
+
+    return endpoint;
+  }
+
   handleErrors(err) {
     console.log({ message: "Api service handler error", err });
   }
@@ -24,9 +39,9 @@ class ReadOnlyApiService extends BaseApiService {
     super(resource);
   }
 
-  async get() {
+  async get(options) {
     try {
-      const response = await this.http.get();
+      const response = await this.http.get(this.buildEndpoint(options));
       return response.data;
     } catch (err) {
       this.handleErrors(err);
@@ -77,8 +92,15 @@ class AuthorsApiService extends ModelApiService {
   }
 }
 
+class PostsApiService extends ModelApiService {
+  constructor() {
+    super("posts");
+  }
+}
+
 const $api = {
   authors: new AuthorsApiService(),
+  posts: new PostsApiService(),
 };
 
 export default function (store) {
