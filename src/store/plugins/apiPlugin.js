@@ -59,6 +59,16 @@ class ModelApiService extends ReadOnlyApiService {
       return null;
     }
   }
+
+  async delete(id) {
+    try {
+      const response = await this.http.delete(`/${id}`);
+      return response.data;
+    } catch (err) {
+      this.handleErrors(err);
+      return null;
+    }
+  }
 }
 
 class AuthorsApiService extends ModelApiService {

@@ -20,9 +20,16 @@ const mutations = {
   },
   editAuthor: (state, updatedAuthor) => {
     const index = state.authors.findIndex((a) => a.id === updatedAuthor.id);
-    if (index) {
+    if (index !== -1) {
       state.selectedAuthorId = null;
       state.authors.splice(index, 1, updatedAuthor);
+    }
+  },
+  deleteAuthor: (state, id) => {
+    const index = state.authors.findIndex((a) => a.id === id);
+    if (index !== -1) {
+      state.selectedAuthorId = null;
+      state.authors.splice(index, 1);
     }
   },
   setSelectedAuthorId: (state, id) => (state.selectedAuthorId = id),
@@ -72,6 +79,20 @@ const actions = {
       response,
       "An error occured while editing author",
       "Author updated successfully!"
+    );
+    commit("addNewNotification", notification);
+  },
+
+  async deleteAuthor({ commit }, id) {
+    const response = await this.$api.authors.delete(id);
+    if (response) {
+      commit("deleteAuthor", id);
+    }
+
+    const notification = getNotification(
+      response,
+      "An error occured while deleting author",
+      "Author deleted successfully!"
     );
     commit("addNewNotification", notification);
   },

@@ -18,6 +18,7 @@ import { mapGetters } from "vuex";
 import Modal from "./components/Modal.vue";
 import CreateAuthor from "./components/Forms/CreateAuthor.vue";
 import EditAuthor from "./components/Forms/EditAuthor.vue";
+import DeleteAuthor from "./components/Forms/DeleteAuthor.vue";
 
 Vue.use(VueRouter);
 
@@ -28,6 +29,7 @@ export default {
     Modal,
     CreateAuthor,
     EditAuthor,
+    DeleteAuthor,
   },
   computed: {
     ...mapGetters(["modal"]),

@@ -13,6 +13,12 @@
       >
         E
       </button>
+      <button
+        @click="showDeleteModal"
+        class="button is-small is-danger is-light ml-2"
+      >
+        D
+      </button>
     </div>
   </div>
 </template>
@@ -39,6 +45,14 @@ export default {
       this.showModal({
         componentName: "EditAuthor",
         title: "Edit author",
+      });
+    },
+    showDeleteModal() {
+      this.setSelectedAuthorId(this.author.id);
+
+      this.showModal({
+        componentName: "DeleteAuthor",
+        title: "Delete confirmation",
       });
     },
   },
