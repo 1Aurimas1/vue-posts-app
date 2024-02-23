@@ -20,6 +20,15 @@ const mutations = {
   addNewPost: (state, post) => {
     state.posts.push(post);
   },
+  editPost: (state, updatedPost) => {
+    const index = state.posts.findIndex((p) => p.id === updatedPost.id);
+    if (index !== -1) {
+      const post = Object.assign(state.posts[index], updatedPost);
+      state.posts.splice(index, 1, post);
+    } else if (state.singlePost) {
+      state.singlePost = Object.assign({}, state.singlePost, updatedPost);
+    }
+  },
 };
 
 const actions = {
@@ -66,6 +75,23 @@ const actions = {
       response,
       "An error occured while creating post",
       "Post added successfully!"
+    );
+    commit("addNewNotification", notification);
+  },
+
+  async editPost({ commit }, data) {
+    const updatedPost = data.post;
+    updatedPost.updated_at = getDateNow();
+
+    const response = await this.$api.posts.patch(data.id, updatedPost);
+    if (response) {
+      commit("editPost", response);
+    }
+
+    const notification = getNotification(
+      response,
+      "An error occured while editing post",
+      "Post updated successfully!"
     );
     commit("addNewNotification", notification);
   },
