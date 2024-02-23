@@ -122,3 +122,36 @@ export class CreatePostValidator {
     return errors;
   }
 }
+
+export class EditPostValidator extends CreatePostValidator {
+  constructor() {
+    super();
+  }
+
+  isPostChanged(oldPost, newPost) {
+    return !(oldPost.title === newPost.title && oldPost.body === newPost.body);
+  }
+
+  validateTitle(title) {
+    return super.validateTitle(title);
+  }
+
+  validateBody(body) {
+    return super.validateBody(body);
+  }
+
+  validateAll(oldPost, newPost) {
+    let errors;
+    if (!this.isPostChanged(oldPost, newPost)) {
+      errors = {
+        general: "No changes were made.",
+      };
+    } else {
+      errors = {
+        title: this.validateTitle(newPost.title),
+        body: this.validateBody(newPost.body),
+      };
+    }
+    return errors;
+  }
+}

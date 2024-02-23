@@ -19,6 +19,12 @@
           </div>
         </div>
         <footer class="card-footer">
+          <button
+            @click="showEditModal"
+            class="card-footer-item button is-link is-inverted"
+          >
+            Edit
+          </button>
         </footer>
       </div>
       <h2 v-else-if="post" class="subtitle notification is-warning">
@@ -40,16 +46,28 @@ export default {
   },
   computed: {
     ...mapGetters({ post: "singlePost" }),
+    ...mapGetters(["postList"]),
   },
   methods: {
-    ...mapActions(["fetchSinglePost"]),
+    ...mapActions(["fetchSinglePost", "showModal"]),
     getNewerDate() {
       return getMaxDate(this.post.created_at, this.post.updated_at);
     },
+    showEditModal() {
+      this.showModal({
+        componentName: "EditPost",
+        title: "Edit post",
+      });
+    },
   },
-  created() {
-    const postId = this.$route.params.id;
-    this.fetchSinglePost(postId);
+  watch: {
+    postList: {
+      immediate: true,
+      handler() {
+        const postId = this.$route.params.id;
+        this.fetchSinglePost(postId);
+      },
+    },
   },
 };
 </script>
