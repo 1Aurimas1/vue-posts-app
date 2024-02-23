@@ -53,22 +53,6 @@ export default {
         title: "Delete confirmation",
       });
     },
-    showEditModal() {
-      this.setSelectedAuthorId(this.author.id);
-
-      this.showModal({
-        componentName: "EditAuthor",
-        title: "Edit author",
-      });
-    },
-    showDeleteModal() {
-      this.setSelectedAuthorId(this.author.id);
-
-      this.showModal({
-        componentName: "DeleteAuthor",
-        title: "Delete confirmation",
-      });
-    },
   },
 };
 </script>

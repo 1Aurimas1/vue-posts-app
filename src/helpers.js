@@ -54,7 +54,7 @@ export function getNotification(
       message: errorMessage || "An unexpected error has occured",
     };
   } else {
-    if (data.length === 0) {
+    if (isObjectEmpty(data) || data.length === 0) {
       notification = {
         type: NotificationTypes.Success,
         message: successEmptyMessage || "There are no records yet",
@@ -67,4 +67,8 @@ export function getNotification(
     }
   }
   return notification;
+}
+
+export function isObjectEmpty(obj) {
+  return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
 }
