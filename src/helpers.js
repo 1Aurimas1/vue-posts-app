@@ -12,11 +12,16 @@ export function getNotificationStyle(notification) {
 }
 
 export function isEmpty(value) {
-  return !value || value.trim().length === 0;
+  switch (typeof value) {
+    case "string":
+      return !value || value.trim().length === 0;
+    case "number":
+      return value == null;
+  }
 }
 
 export function isValidLength(value, min, max) {
-  return min <= value.length && value.length <= max;
+  return value && min <= value.length && value.length <= max;
 }
 
 export function containsNumbers(value) {
@@ -71,4 +76,8 @@ export function getNotification(
 
 export function isObjectEmpty(obj) {
   return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+export function getDateNow() {
+  return new Date().toISOString().split("T")[0];
 }

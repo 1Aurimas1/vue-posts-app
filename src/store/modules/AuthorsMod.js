@@ -1,4 +1,4 @@
-import { getNotification } from "../../helpers";
+import { getDateNow, getNotification } from "../../helpers";
 
 const state = {
   authors: [],
@@ -9,6 +9,7 @@ const getters = {
   authorList: (state) => state.authors,
   selectedAuthor: (state) =>
     state.authors.find((a) => a.id === state.selectedAuthorId) || {},
+  authorById: (state) => (id) => state.authors.find((a) => a.id === id),
 };
 
 const mutations = {
@@ -42,8 +43,8 @@ const actions = {
 
     const notification = getNotification(
       authors,
-      "An error occured while fetching data.",
-      "Data fetched successfully!",
+      "An error occured while fetching authors data.",
+      "Authors data fetched successfully!",
       "There are no authors yet"
     );
     commit("addNewNotification", notification);
@@ -87,7 +88,7 @@ const actions = {
   async deleteAuthor({ commit }, id) {
     const response = await this.$api.authors.delete(id);
     if (response) {
-      commit("deleteAuthor", id);
+      commit("deleteAuthor", response.id);
     }
 
     const notification = getNotification(
@@ -98,10 +99,6 @@ const actions = {
     commit("addNewNotification", notification);
   },
 };
-
-function getDateNow() {
-  return new Date().toISOString().split("T")[0];
-}
 
 export default {
   state,

@@ -1,4 +1,4 @@
-import { getNotification } from "../../helpers";
+import { getDateNow, getNotification } from "../../helpers";
 
 const state = {
   posts: [],
@@ -17,6 +17,9 @@ const mutations = {
   setSinglePost: (state, post) => {
     state.singlePost = post;
   },
+  addNewPost: (state, post) => {
+    state.posts.push(post);
+  },
 };
 
 const actions = {
@@ -26,8 +29,8 @@ const actions = {
 
     const notification = getNotification(
       posts,
-      "An error occured while fetching data.",
-      "Data fetched successfully!",
+      "An error occured while fetching posts data.",
+      "Posts data fetched successfully!",
       "There are no posts yet"
     );
     commit("addNewNotification", notification);
@@ -45,6 +48,24 @@ const actions = {
       "An error occured while fetching article.",
       "Post fetched successfully!",
       "The article does not exist."
+    );
+    commit("addNewNotification", notification);
+  },
+
+  async addNewPost({ commit }, newPost) {
+    const author = this.getters.authorById(newPost.authorId);
+    newPost.created_at = getDateNow();
+    newPost.updated_at = newPost.created_at;
+
+    const response = await this.$api.posts.post(newPost);
+    if (response) {
+      commit("addNewPost", { author, ...response });
+    }
+
+    const notification = getNotification(
+      response,
+      "An error occured while creating post",
+      "Post added successfully!"
     );
     commit("addNewNotification", notification);
   },
