@@ -45,6 +45,9 @@ class ReadOnlyApiService extends BaseApiService {
       return response.data;
     } catch (err) {
       this.handleErrors(err);
+      if (err.response && err.response.status === 404) {
+        return {};
+      }
       return null;
     }
   }

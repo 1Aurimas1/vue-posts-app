@@ -103,10 +103,6 @@ function getDateNow() {
   return new Date().toISOString().split("T")[0];
 }
 
-function getDateNow() {
-  return new Date().toISOString().split("T")[0];
-}
-
 export default {
   state,
   getters,
