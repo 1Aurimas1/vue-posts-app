@@ -19,6 +19,7 @@ import Modal from "./components/Modal.vue";
 import CreateAuthor from "./components/Forms/CreateAuthor.vue";
 import EditAuthor from "./components/Forms/EditAuthor.vue";
 import DeleteAuthor from "./components/Forms/DeleteAuthor.vue";
+import CreatePost from "./components/Forms/CreatePost.vue";
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,7 @@ export default {
     CreateAuthor,
     EditAuthor,
     DeleteAuthor,
+    CreatePost,
   },
   computed: {
     ...mapGetters(["modal"]),

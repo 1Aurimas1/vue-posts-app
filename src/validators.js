@@ -12,6 +12,10 @@ export class BaseValidator {
     this.#errors = [];
   }
 
+  get errors() {
+    return this.#errors;
+  }
+
   addError(error) {
     this.#errors.push(error);
   }
@@ -65,5 +69,56 @@ export class EditAuthorValidator extends CreateAuthorValidator {
     if (oldName === newName) {
       super.addError("Name should not be the same");
     }
+  }
+}
+
+export class CreatePostValidator {
+  constructor() {}
+
+  validateTitle(title) {
+    const minLength = 5;
+    const maxLength = 20;
+
+    if (isEmpty(title)) {
+      return "Title is required";
+    }
+
+    if (!isValidLength(title, minLength, maxLength)) {
+      return `Title length must be between ${minLength} and ${maxLength} characters inclusive`;
+    }
+
+    return "";
+  }
+
+  validateAuthorId(id) {
+    if (isEmpty(id)) {
+      return "Author is required";
+    }
+
+    return "";
+  }
+
+  validateBody(body) {
+    const minLength = 15;
+    const maxLength = 300;
+
+    if (isEmpty(body)) {
+      return "Content is required";
+    }
+
+    if (!isValidLength(body, minLength, maxLength)) {
+      return `Content length must be between ${minLength} and ${maxLength} characters inclusive`;
+    }
+
+    return "";
+  }
+
+  validateAll(post) {
+    const errors = {
+      title: this.validateTitle(post.title),
+      authorId: this.validateAuthorId(post.authorId),
+      body: this.validateBody(post.body),
+    };
+    return errors;
   }
 }
