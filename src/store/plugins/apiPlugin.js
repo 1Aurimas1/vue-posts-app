@@ -78,9 +78,9 @@ class ModelApiService extends ReadOnlyApiService {
     }
   }
 
-  async delete(id) {
+  async delete(options) {
     try {
-      const response = await this.http.delete(`/${id}`);
+      const response = await this.http.delete(this.buildEndpoint(options));
       return response.data;
     } catch (err) {
       this.handleErrors(err);

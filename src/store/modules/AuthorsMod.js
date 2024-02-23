@@ -86,14 +86,18 @@ const actions = {
   },
 
   async deleteAuthor({ commit }, id) {
-    const response = await this.$api.authors.delete(id);
+    const response = await this.$api.authors.delete({
+      id: id,
+      params: "_dependent=posts",
+    });
     if (response) {
-      commit("deleteAuthor", response.id);
+      commit("deleteAuthor", id);
     }
 
     const notification = getNotification(
       response,
       "An error occured while deleting author",
+      "Author deleted successfully!",
       "Author deleted successfully!"
     );
     commit("addNewNotification", notification);

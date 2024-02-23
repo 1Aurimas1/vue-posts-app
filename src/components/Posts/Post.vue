@@ -12,9 +12,15 @@
     <div class="column is-2 is-flex">
       <button
         @click="showEditModal"
-        class="button is-small is-warning is-light ml-2"
+        class="button is-small is-warning is-light mr-2"
       >
         E
+      </button>
+      <button
+        @click="showDeleteModal"
+        class="button is-small is-danger is-light"
+      >
+        D
       </button>
     </div>
   </div>
@@ -42,6 +48,13 @@ export default {
       this.showModal({
         componentName: "EditPost",
         title: "Edit post",
+      });
+    },
+    showDeleteModal() {
+      this.setSinglePost(this.post);
+      this.showModal({
+        componentName: "DeletePost",
+        title: "Delete post",
       });
     },
   },

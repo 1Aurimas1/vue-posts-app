@@ -29,6 +29,13 @@ const mutations = {
       state.singlePost = Object.assign({}, state.singlePost, updatedPost);
     }
   },
+  deletePost: (state, id) => {
+    const index = state.posts.findIndex((p) => p.id === id);
+    if (index !== -1) {
+      state.posts.splice(index, 1);
+    }
+    state.singlePost = null;
+  },
 };
 
 const actions = {
@@ -92,6 +99,21 @@ const actions = {
       response,
       "An error occured while editing post",
       "Post updated successfully!"
+    );
+    commit("addNewNotification", notification);
+  },
+
+  async deletePost({ commit }, id) {
+    const response = await this.$api.posts.delete({ id: id });
+    if (response) {
+      commit("deletePost", id);
+    }
+
+    const notification = getNotification(
+      response,
+      "An error occured while deleting post",
+      "Post deleted successfully!",
+      "Post deleted successfully!"
     );
     commit("addNewNotification", notification);
   },

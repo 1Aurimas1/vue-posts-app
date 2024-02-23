@@ -25,6 +25,12 @@
           >
             Edit
           </button>
+          <button
+            @click="showDeleteModal"
+            class="card-footer-item button is-danger is-inverted"
+          >
+            Delete
+          </button>
         </footer>
       </div>
       <h2 v-else-if="post" class="subtitle notification is-warning">
@@ -42,6 +48,7 @@ export default {
   data() {
     return {
       title: "Post detail page",
+      isDeleted: false,
     };
   },
   computed: {
@@ -59,14 +66,28 @@ export default {
         title: "Edit post",
       });
     },
+    showDeleteModal() {
+      this.showModal({
+        componentName: "DeletePost",
+        title: "Delete post",
+      });
+    },
   },
   watch: {
     postList: {
       immediate: true,
       handler() {
-        const postId = this.$route.params.id;
-        this.fetchSinglePost(postId);
+        if (!this.isDeleted) {
+          const postId = this.$route.params.id;
+          this.fetchSinglePost(postId);
+        }
       },
+    },
+    post(newVal, oldVal) {
+      if (oldVal && !newVal) {
+        this.isDeleted = true;
+        this.$router.push({ path: "/posts" });
+      }
     },
   },
 };
