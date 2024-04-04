@@ -63,6 +63,6 @@ export default {
   overflow: hidden;
 }
 .data-list {
-  width: 25rem;
+  width: 35rem;
 }
 </style>

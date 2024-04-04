@@ -42,7 +42,7 @@ class ReadOnlyApiService extends BaseApiService {
   async get(options) {
     try {
       const response = await this.http.get(this.buildEndpoint(options));
-      return response.data;
+      return response;
     } catch (err) {
       this.handleErrors(err);
       if (err.response && err.response.status === 404) {

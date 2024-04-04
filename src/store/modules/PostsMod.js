@@ -3,11 +3,13 @@ import { getDateNow, getNotification } from "../../helpers";
 const state = {
   posts: [],
   singlePost: {},
+  totalPosts: 0,
 };
 
 const getters = {
   postList: (state) => state.posts,
   singlePost: (state) => state.singlePost,
+  totalPosts: (state) => state.totalPosts,
 };
 
 const mutations = {
@@ -36,11 +38,13 @@ const mutations = {
     }
     state.singlePost = null;
   },
+  setTotalPosts: (state, total) => (state.totalPosts = parseInt(total)),
 };
 
 const actions = {
   async fetchPosts({ commit }) {
-    const posts = await this.$api.posts.get({ params: "_expand=author" });
+    const response = await this.$api.posts.get({ params: "_expand=author" });
+    const posts = response.data;
     commit("setPosts", posts);
 
     const notification = getNotification(
@@ -53,10 +57,11 @@ const actions = {
   },
 
   async fetchSinglePost({ commit }, id) {
-    const post = await this.$api.posts.get({
+    const response = await this.$api.posts.get({
       id: id,
       params: "_expand=author",
     });
+    const post = response.data;
     commit("setSinglePost", post);
 
     const notification = getNotification(
@@ -116,6 +121,14 @@ const actions = {
       "Post deleted successfully!"
     );
     commit("addNewNotification", notification);
+  },
+
+  async fetchPaginatedPosts({ commit }, data) {
+    const response = await this.$api.posts.get({
+      params: `_expand=author&_page=${data.currentPage}&_limit=${data.perPage}`,
+    });
+    commit("setPosts", response.data);
+    commit("setTotalPosts", response.headers["x-total-count"]);
   },
 };
 

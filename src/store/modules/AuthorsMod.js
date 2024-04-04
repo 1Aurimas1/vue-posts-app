@@ -3,6 +3,7 @@ import { getDateNow, getNotification } from "../../helpers";
 const state = {
   authors: [],
   selectedAuthorId: null,
+  totalAuthors: 0,
 };
 
 const getters = {
@@ -10,6 +11,7 @@ const getters = {
   selectedAuthor: (state) =>
     state.authors.find((a) => a.id === state.selectedAuthorId) || {},
   authorById: (state) => (id) => state.authors.find((a) => a.id === id),
+  totalAuthors: (state) => state.totalAuthors,
 };
 
 const mutations = {
@@ -34,11 +36,13 @@ const mutations = {
     }
   },
   setSelectedAuthorId: (state, id) => (state.selectedAuthorId = id),
+  setTotalAuthors: (state, total) => (state.totalAuthors = parseInt(total)),
 };
 
 const actions = {
   async fetchAuthors({ commit }) {
-    const authors = await this.$api.authors.get();
+    const response = await this.$api.authors.get();
+    const authors = response.data;
     commit("setAuthors", authors);
 
     const notification = getNotification(
@@ -101,6 +105,14 @@ const actions = {
       "Author deleted successfully!"
     );
     commit("addNewNotification", notification);
+  },
+
+  async fetchPaginatedAuthors({ commit }, data) {
+    const response = await this.$api.authors.get({
+      params: `_page=${data.currentPage}&_limit=${data.perPage}`,
+    });
+    commit("setAuthors", response.data);
+    commit("setTotalAuthors", response.headers["x-total-count"]);
   },
 };
 
