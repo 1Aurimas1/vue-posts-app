@@ -124,8 +124,9 @@ const actions = {
   },
 
   async fetchPaginatedPosts({ commit }, data) {
+    const { pagination, query } = data;
     const response = await this.$api.posts.get({
-      params: `_expand=author&_page=${data.currentPage}&_limit=${data.perPage}`,
+      params: `_expand=author&_page=${pagination.currentPage}&_limit=${pagination.perPage}&title_like=${query}`,
     });
     commit("setPosts", response.data);
     commit("setTotalPosts", response.headers["x-total-count"]);

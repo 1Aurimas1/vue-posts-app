@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Search @search="handleSearch" />
     <Pagination
       @changePage="onPageChange"
       :totalItems="totalPosts"
@@ -20,11 +21,13 @@
 import { mapActions, mapGetters } from "vuex";
 import Post from "./Post.vue";
 import Pagination from "../Pagination.vue";
+import Search from "../Search.vue";
 
 export default {
   components: {
     Post,
     Pagination,
+    Search,
   },
   data() {
     return {
@@ -32,6 +35,7 @@ export default {
         currentPage: 1,
         perPage: 3,
       },
+      searchQuery: "",
     };
   },
   computed: mapGetters(["postList", "totalPosts"]),
@@ -39,11 +43,21 @@ export default {
     ...mapActions(["fetchPaginatedPosts"]),
     onPageChange(currentPage) {
       this.pagination.currentPage = currentPage;
-      this.fetchPaginatedPosts(this.pagination);
+      this.fetchPaginatedPosts({
+        pagination: this.pagination,
+        query: this.searchQuery,
+      });
+    },
+    handleSearch(query) {
+      this.searchQuery = query;
+      this.fetchPaginatedPosts({ pagination: this.pagination, query: query });
     },
   },
   created() {
-    this.fetchPaginatedPosts(this.pagination);
+    this.fetchPaginatedPosts({
+      pagination: this.pagination,
+      query: this.searchQuery,
+    });
   },
 };
 </script>

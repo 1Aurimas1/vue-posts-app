@@ -108,8 +108,9 @@ const actions = {
   },
 
   async fetchPaginatedAuthors({ commit }, data) {
+    const { pagination, query } = data;
     const response = await this.$api.authors.get({
-      params: `_page=${data.currentPage}&_limit=${data.perPage}`,
+      params: `_page=${pagination.currentPage}&_limit=${pagination.perPage}&name_like=${query}`,
     });
     commit("setAuthors", response.data);
     commit("setTotalAuthors", response.headers["x-total-count"]);

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Search @search="handleSearch" />
     <Pagination
       @changePage="onPageChange"
       :totalItems="totalAuthors"
@@ -19,11 +20,13 @@
 import { mapActions, mapGetters } from "vuex";
 import Author from "./Author.vue";
 import Pagination from "../Pagination.vue";
+import Search from "../Search.vue";
 
 export default {
   components: {
     Author,
     Pagination,
+    Search,
   },
   data() {
     return {
@@ -31,6 +34,7 @@ export default {
         currentPage: 1,
         perPage: 2,
       },
+      searchQuery: "",
     };
   },
   computed: mapGetters(["authorList", "totalAuthors"]),
@@ -38,11 +42,21 @@ export default {
     ...mapActions(["fetchPaginatedAuthors"]),
     onPageChange(currentPage) {
       this.pagination.currentPage = currentPage;
-      this.fetchPaginatedAuthors(this.pagination);
+      this.fetchPaginatedAuthors({
+        pagination: this.pagination,
+        query: this.searchQuery,
+      });
+    },
+    handleSearch(query) {
+      this.searchQuery = query;
+      this.fetchPaginatedAuthors({ pagination: this.pagination, query: query });
     },
   },
   created() {
-    this.fetchPaginatedAuthors(this.pagination);
+    this.fetchPaginatedAuthors({
+      pagination: this.pagination,
+      query: this.searchQuery,
+    });
   },
 };
 </script>
