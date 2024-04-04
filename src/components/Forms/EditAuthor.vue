@@ -4,7 +4,8 @@
       <label class="label">Name</label>
       <div class="control">
         <input
-          v-model.lazy.trim="form.name"
+          v-model.trim="form.name"
+          @input="validate('name')"
           class="input"
           type="text"
           placeholder="enter author's name..."
@@ -12,6 +13,7 @@
           maxlength="30"
         />
       </div>
+      <p v-if="errors.name" class="help is-danger">{{ errors.name }}</p>
     </div>
 
     <div class="field is-grouped">
@@ -25,9 +27,11 @@
 </template>
 
 <script>
-import { NotificationTypes } from "../../constants";
-import { EditAuthorValidator } from "../../validators";
+import { AuthorRules } from "../../constants";
+import { Validator } from "../../validator";
 import { mapGetters, mapActions } from "vuex";
+
+const validator = new Validator();
 
 export default {
   data() {
@@ -35,30 +39,37 @@ export default {
       form: {
         name: "",
       },
+      errors: {},
     };
   },
   computed: {
     ...mapGetters(["selectedAuthor", "modal"]),
+    rules() {
+      return {
+        ...AuthorRules,
+        name: `${AuthorRules.name}|is_not_same:${this.selectedAuthor.name}`,
+      };
+    },
   },
   methods: {
-    ...mapActions(["editAuthor", "addNewNotification", "hideModal"]),
+    ...mapActions(["editAuthor", "hideModal"]),
+    validate(fieldName) {
+      this.errors[fieldName] = validator.validate(
+        this.form[fieldName],
+        this.rules[fieldName]
+      );
+    },
     handleUpdate() {
-      const updatedAuthor = JSON.parse(JSON.stringify(this.form));
-
-      const validator = new EditAuthorValidator();
-      validator.validateName(this.selectedAuthor.name, updatedAuthor.name);
-
-      if (validator.getErrorCount()) {
-        this.addNewNotification({
-          message: validator.toStringErrors(),
-          type: NotificationTypes.Error,
-        });
+      const errors = validator.validateForm(this.form, this.rules);
+      if (errors) {
+        this.errors = errors;
         return;
       }
 
-      this.performCleanup();
-
+      const updatedAuthor = JSON.parse(JSON.stringify(this.form));
       this.editAuthor({ id: this.selectedAuthor.id, author: updatedAuthor });
+
+      this.performCleanup();
     },
     performCleanup() {
       this.hideModal();
@@ -75,7 +86,10 @@ export default {
       },
     },
     "modal.isVisible": function (oldValue) {
-      if (oldValue) this.setFormValues();
+      if (oldValue) {
+        this.errors = {};
+        this.setFormValues();
+      }
     },
   },
 };

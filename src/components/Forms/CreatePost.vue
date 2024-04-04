@@ -5,7 +5,7 @@
       <div class="control">
         <input
           v-model.trim="form.title"
-          @input="validateTitle"
+          @input="validate('title')"
           class="input"
           type="text"
           placeholder="enter post's title..."
@@ -20,8 +20,8 @@
       <div class="control">
         <div class="select">
           <select
-            v-model.lazy="form.authorId"
-            @change="validateAuthorId"
+            v-model="form.authorId"
+            @change="validate('authorId')"
             required
           >
             <option disabled value="">Please select one</option>
@@ -44,7 +44,7 @@
       <div class="control">
         <textarea
           v-model.trim="form.body"
-          @input="validateBody"
+          @input="validate('body')"
           class="textarea"
           type="text"
           placeholder="enter post's content..."
@@ -66,19 +66,16 @@
 </template>
 
 <script>
-import { CreatePostValidator } from "../../validators";
+import { PostRules } from "../../constants";
+import { Validator } from "../../validator";
 import { mapGetters, mapActions } from "vuex";
 
-const validator = new CreatePostValidator();
+const validator = new Validator();
 
 export default {
   data() {
     return {
-      form: {
-        title: "",
-        authorId: "",
-        body: "",
-      },
+      form: this.createFormObject(),
       errors: {},
     };
   },
@@ -87,18 +84,21 @@ export default {
   },
   methods: {
     ...mapActions(["addNewPost", "hideModal", "fetchAuthors"]),
-    validateTitle() {
-      this.errors.title = validator.validateTitle(this.form.title);
+    createFormObject() {
+      return { title: "", authorId: "", body: "" };
     },
-    validateAuthorId() {
-      this.errors.authorId = validator.validateAuthorId(this.form.authorId);
-    },
-    validateBody() {
-      this.errors.body = validator.validateBody(this.form.body);
+    validate(fieldName) {
+      this.errors[fieldName] = validator.validate(
+        this.form[fieldName],
+        PostRules[fieldName]
+      );
     },
     handleSubmit() {
-      this.errors = validator.validateAll(this.form);
-      for (const err of Object.values(this.errors)) if (err) return;
+      const errors = validator.validateForm(this.form, PostRules);
+      if (errors) {
+        this.errors = errors;
+        return;
+      }
 
       const newPost = JSON.parse(JSON.stringify(this.form));
       this.addNewPost(newPost);
@@ -116,9 +116,7 @@ export default {
     "modal.isVisible": function (oldValue) {
       if (oldValue) {
         this.errors = {};
-        this.form = {
-          authorId: "",
-        };
+        this.form = this.createFormObject();
       }
     },
   },

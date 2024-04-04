@@ -17,11 +17,17 @@ export function isEmpty(value) {
       return !value || value.trim().length === 0;
     case "number":
       return value == null;
+    default:
+      return !value;
   }
 }
 
-export function isValidLength(value, min, max) {
-  return value && min <= value.length && value.length <= max;
+export function isValidMinLength(value, min) {
+  return value && min <= value.length;
+}
+
+export function isValidMaxLength(value, max) {
+  return value && value.length <= max;
 }
 
 export function containsNumbers(value) {

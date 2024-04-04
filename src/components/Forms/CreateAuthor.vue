@@ -4,7 +4,8 @@
       <label class="label">Name</label>
       <div class="control">
         <input
-          v-model.lazy.trim="form.name"
+          v-model.trim="form.name"
+          @input="validate('name')"
           class="input"
           type="text"
           placeholder="enter author's name..."
@@ -12,6 +13,7 @@
           maxlength="30"
         />
       </div>
+      <p v-if="errors.name" class="help is-danger">{{ errors.name }}</p>
     </div>
 
     <div class="field is-grouped">
@@ -25,40 +27,44 @@
 </template>
 
 <script>
-import { NotificationTypes } from "../../constants";
-import { CreateAuthorValidator } from "../../validators";
+import { AuthorRules } from "../../constants";
+import { Validator } from "../../validator";
 import { mapGetters, mapActions } from "vuex";
+
+const validator = new Validator();
 
 export default {
   data() {
     return {
-      form: {
-        name: "",
-      },
+      form: this.createFormObject(),
+      errors: {},
     };
   },
   computed: {
     ...mapGetters(["modal"]),
   },
   methods: {
-    ...mapActions(["addNewAuthor", "addNewNotification", "hideModal"]),
+    ...mapActions(["addNewAuthor", "hideModal"]),
+    createFormObject() {
+      return { name: "" };
+    },
+    validate(fieldName) {
+      this.errors[fieldName] = validator.validate(
+        this.form[fieldName],
+        AuthorRules[fieldName]
+      );
+    },
     handleSubmit() {
-      const newAuthor = JSON.parse(JSON.stringify(this.form));
-
-      const validator = new CreateAuthorValidator();
-      validator.validateName(newAuthor.name);
-
-      if (validator.getErrorCount()) {
-        this.addNewNotification({
-          message: validator.toStringErrors(),
-          type: NotificationTypes.Error,
-        });
+      const errors = validator.validateForm(this.form, AuthorRules);
+      if (errors) {
+        this.errors = errors;
         return;
       }
 
-      this.performCleanup();
-
+      const newAuthor = JSON.parse(JSON.stringify(this.form));
       this.addNewAuthor(newAuthor);
+
+      this.performCleanup();
     },
     performCleanup() {
       this.hideModal();
@@ -66,7 +72,10 @@ export default {
   },
   watch: {
     "modal.isVisible": function (oldValue) {
-      if (oldValue) this.form = {};
+      if (oldValue) {
+        this.errors = {};
+        this.form = this.createFormObject();
+      }
     },
   },
 };
